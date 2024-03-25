@@ -117,7 +117,7 @@ def display_model_selector():
 
 # Select dimensionality reduction technique
 def display_dimensionality_reduction_technique():
-    dimensionality_reduction_technique = ("T-SNE", "PCA")
+    dimensionality_reduction_technique = ("t-SNE", "PCA")
     selected_technique = st.sidebar.radio(
         "Dimensionality reduction technique: ", dimensionality_reduction_technique
     )
@@ -131,7 +131,7 @@ def get_word_vectors(word_vectors, word_list):
 
 # Get similar words to chosen word
 def get_similar_words(word_vectors, word, topn=15):
-    return [word for word, _ in word_vectors.most_similar(positive=[word], topn=topn)]
+    return [(word, score) for word, score in word_vectors.most_similar(positive=[word], topn=topn)]
 
 
 # TSNE dimensionality reduction
@@ -171,9 +171,19 @@ def get_embedding_data(model_path, word_list, number_similar_words, select_model
     color_list_similar_words = []
     # Get similar words and add them to the set
     set_of_similar_words = []
+    similar_words_dict = {}
     for word in word_list:
         key_word_color_list.append("#FF0000")
-        similar_words = get_similar_words(wv, word, number_similar_words)
+        similar_words_and_score = get_similar_words(wv, word, number_similar_words)
+
+        similar_words = [sim_word for sim_word, _ in similar_words_and_score]
+        print(similar_words_and_score)
+        similar_words_dict[word] ={}
+        for sim_word, score in similar_words_and_score:
+            print(word)
+            print(sim_word)
+            similar_words_dict[word][sim_word] = score
+
         set_of_similar_words.extend(similar_words)
         # logger.info("tuple_similar_words: ", similar_words)
         color_list_similar_words.extend(len(similar_words) * [next(color_pallet_cycle)])
@@ -185,9 +195,10 @@ def get_embedding_data(model_path, word_list, number_similar_words, select_model
     # color of words
     key_word_color_list.extend(color_list_similar_words)
 
-    return word_list, word_vector_list, key_word_color_list
+    return word_list, word_vector_list, key_word_color_list, similar_words_dict
 
 
+# 2D plot for word embeddings
 def plot_dimensionality_reduction_2D(
     reduce, word_labels, color_list, word_list, plot_title, loc_legend
 ):
@@ -262,6 +273,7 @@ def convert_img(fig):
     return fig.to_image(format="png", width=950, height=750, scale=3)
 
 
+# 3D plot for word embeddings
 def plot_dimensionality_reduction_3D(
     reduce,
     word_labels,
@@ -374,7 +386,6 @@ def load_embedding_model(model_path, select_model_type):
 
 @st.cache_resource
 def check_words_vocab(model_path, word_list, select_model_type):
-    st.write('Please be patient, while the tool loads the embedding model and does a vocabulary check.')
     wv = load_embedding_model(model_path, select_model_type)
     for word in word_list:
         if word not in wv.key_to_index:
@@ -459,7 +470,7 @@ def main():
                     )
                     button = st.sidebar.button("Visualise")
                     if button:
-                        word_labels, word_vectors, color_list = get_embedding_data(
+                        word_labels, word_vectors, color_list, similar_words_dict = get_embedding_data(
                             model_path_w2v, search_for, number_similar_words, select_model_type
                         )
                         if technique == "T-SNE":
@@ -490,6 +501,9 @@ def main():
                                 plot_title,
                                 loc_legend,
                             )
+
+                        st.write("Words of interest and there associated cosine similarity score with matching words: ")
+                        st.json(similar_words_dict)
                 else:
                     opacity = st.sidebar.slider(
                         "Opacity: ",
@@ -508,9 +522,13 @@ def main():
                         add_text = "text"
                     button = st.sidebar.button("Visualise")
                     if button:
-                        word_labels, word_vectors, color_list = get_embedding_data(
+                        word_labels, word_vectors, color_list, similar_words_dict = get_embedding_data(
                             model_path_w2v, search_for, number_similar_words, select_model_type
                         )
+                        print('word_labels: ',word_labels)
+                        # print('word_vectors: ', word_vectors)
+                        print('color_list: ', color_list)
+
                         if technique == "T-SNE":
                             tsne_reduce = tsne_dimensionality_reduction(
                                 word_vectors,
@@ -543,6 +561,9 @@ def main():
                                 size_sphere,
                                 add_text,
                             )
+
+                        st.write("Words of interest and there associated cosine similarity score with matching words: ")
+                        st.json(similar_words_dict)
 
 
 if __name__ == "__main__":
