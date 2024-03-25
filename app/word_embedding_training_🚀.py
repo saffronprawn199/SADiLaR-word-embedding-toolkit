@@ -35,7 +35,7 @@ def main_page_setup():
                   - Create a CSV file with a column named `Sentences`. Ensure that documents are added as rows in this CSV file, not as new columns.
                   - Set up the model type and training configuration, including the model's hyperparameters, using the sidebar on the left side of your screen. Name your model and click "Train word embeddings". 
                   - After the model has finished training, it will be saved in a folder within your local app directory, organised by similarly named model type (i.e. fastText or word2vec).
-                  - Please visit the "Visualise Page" after the training is complete to view your trained embeddings..
+                  - Please visit the "Visualise embedding" page after the training is complete to view your trained embeddings.
                     ''')
     st.sidebar.success("Select an option above.")
 
