@@ -1,4 +1,4 @@
-# SADiLaR word embedding training tool
+# SADiLaR Word Embedding Toolkit
 
 Please follow the instructions below.
 
