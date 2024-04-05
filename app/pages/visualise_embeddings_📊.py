@@ -200,7 +200,7 @@ def get_embedding_data(model_path, word_list, number_similar_words, select_model
 
 # 2D plot for word embeddings
 def plot_dimensionality_reduction_2D(
-    reduce, word_labels, color_list, word_list, plot_title, loc_legend
+    reduce, word_labels, color_list, word_list, plot_title, loc_legend, technique
 ):
 
     # DataFrame for plotting
@@ -255,8 +255,12 @@ def plot_dimensionality_reduction_2D(
     plt.ylim(df.iloc[:, 1].min(), df.iloc[:, 1].max())  # continuous bag of words
     plt.title(plot_title, fontsize=24)
     plt.tick_params(labelsize=20)
-    plt.xlabel("tsne-one", fontsize=24)
-    plt.ylabel("tsne-two", fontsize=24)
+    if technique == "T-SNE":
+        plt.xlabel("tsne-one", fontsize=24)
+        plt.ylabel("tsne-two", fontsize=24)
+    else:
+        plt.xlabel("pca-one", fontsize=24)
+        plt.ylabel("pca-two", fontsize=24)
     st.pyplot(fig)
 
     fn = "PLACEHOLDER_NAME.png"
@@ -488,6 +492,7 @@ def main():
                                 search_for_copy,
                                 plot_title,
                                 loc_legend,
+                                technique
                             )
                         else:
                             pca_reduce = pca_dimensionality_reduction(
@@ -500,6 +505,7 @@ def main():
                                 search_for_copy,
                                 plot_title,
                                 loc_legend,
+                                technique
                             )
 
                         st.write("Words of interest and there associated cosine similarity score with matching words: ")
