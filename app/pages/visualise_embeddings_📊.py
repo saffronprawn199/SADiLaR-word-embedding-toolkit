@@ -85,10 +85,6 @@ def display_search():
     return search_for
 
 
-def show_word_similarity_score():
-    pass
-
-
 # Check if directory model exists
 def check_directory_exists(directory_path):
     # Check if the specified directory exists
