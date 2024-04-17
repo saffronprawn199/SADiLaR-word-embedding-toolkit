@@ -40,6 +40,7 @@ def main_page_setup():
     st.sidebar.success("Select an option above.")
 
 
+
 # User input handling
 def handle_user_input():
     my_input = st.text_input(
@@ -365,6 +366,7 @@ def main():
         pretrained_model_path,
         pretrained_binary,
     )
+    st.image('./images/embeddings_image.png', caption='Example of how word embeddings work.')
 
 
 if __name__ == "__main__":
