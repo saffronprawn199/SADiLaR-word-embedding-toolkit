@@ -4,7 +4,7 @@ Please follow the instructions below.
 
 ## Installation
 
-For installation to work as expected please insure you are running `python=3.9` on your local machine before creating the virtual environment.
+For installation to work as expected please ensure you are running `python=3.9` on your local machine before creating the virtual environment.
 #### Create a virtual environment:
 
 ```bash
