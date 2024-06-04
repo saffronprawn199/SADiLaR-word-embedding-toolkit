@@ -113,7 +113,7 @@ def display_model_selector():
 
 # Select dimensionality reduction technique
 def display_dimensionality_reduction_technique():
-    dimensionality_reduction_technique = ("t-SNE", "PCA")
+    dimensionality_reduction_technique = ("T-SNE", "PCA")
     selected_technique = st.sidebar.radio(
         "Dimensionality reduction technique: ", dimensionality_reduction_technique
     )
@@ -173,11 +173,8 @@ def get_embedding_data(model_path, word_list, number_similar_words, select_model
         similar_words_and_score = get_similar_words(wv, word, number_similar_words)
 
         similar_words = [sim_word for sim_word, _ in similar_words_and_score]
-        print(similar_words_and_score)
         similar_words_dict[word] ={}
         for sim_word, score in similar_words_and_score:
-            print(word)
-            print(sim_word)
             similar_words_dict[word][sim_word] = score
 
         set_of_similar_words.extend(similar_words)
@@ -527,9 +524,6 @@ def main():
                         word_labels, word_vectors, color_list, similar_words_dict = get_embedding_data(
                             model_path_w2v, search_for, number_similar_words, select_model_type
                         )
-                        print('word_labels: ',word_labels)
-                        # print('word_vectors: ', word_vectors)
-                        print('color_list: ', color_list)
 
                         if technique == "T-SNE":
                             tsne_reduce = tsne_dimensionality_reduction(
